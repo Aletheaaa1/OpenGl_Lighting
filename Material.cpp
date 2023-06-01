@@ -5,8 +5,8 @@ Material::Material(float *ambient, float *diffuse, float *specular, float shinin
 {
 }
 
-Material::Material(float *ambient, unsigned int diffuse, float *specular, float shininess)
-    : m_ambient(ambient), m_material_diffuse(diffuse), m_specular(specular), m_shininess(shininess)
+Material::Material(float *ambient, unsigned int diffuse, unsigned int specular, float shininess)
+    : m_ambient(ambient), m_material_diffuse(diffuse), m_material_specular(specular), m_shininess(shininess)
 {
 }
 
@@ -33,4 +33,9 @@ float Material::GetShininess()
 unsigned int Material::GetMaterialDiffuse()
 {
     return m_material_diffuse;
+}
+
+unsigned int Material::GetMaterialSpecular()
+{
+    return m_material_specular;
 }

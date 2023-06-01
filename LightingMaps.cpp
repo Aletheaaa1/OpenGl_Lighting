@@ -181,6 +181,11 @@ int main(void)
 
     Texture texture("./container2.png", GL_RGBA);
     texture.Usetexture(GL_TEXTURE0);
+
+    Texture specular_texture("./container2_specular.png", GL_RGBA);
+    specular_texture.Usetexture(GL_TEXTURE1);
+    std::cout<<specular_texture.GetSlot()<<std::endl;
+
     // Camera
     glm::mat4 module_mat = glm::mat4(1.0f);
     glm::mat4 view_mat = glm::mat4(1.0f);
@@ -190,7 +195,7 @@ int main(void)
     // Material
     float material_ambient[] = {0.1745f, 0.01175f, 0.01175f};
     unsigned int material_diffuse = texture.GetSlot();
-    float material_speculatr[] = {0.5f, 0.5f, 0.5f};
+    unsigned int  material_speculatr = specular_texture.GetSlot();
     float material_shininess = 64.0f;
     Material material(material_ambient, material_diffuse, material_speculatr, material_shininess);
 
@@ -208,7 +213,7 @@ int main(void)
         vbo.Bind();
 
         float object_color[3] = {1.0f, 1.0f, 1.0f};
-        float ambient_color[3] = {0.2f, 0.2f, 0.2f};
+        float ambient_color[3] = {0.5f, 0.5f, 0.5f};
         float light_color[3] = {1.0f, 1.0f, 1.0f};
         float light_position[3] = {10.0f, 10.0f, -5.0f};
 
