@@ -57,7 +57,7 @@ void main()
 
     vec3 diffuseColor = max(dot(lightDirection, Normal), 0) * lightColor;
 
-    vec3 ambient = ambientColor * texture(material.diffuse, UVCoord).rgb * 0.5f;
+    vec3 ambient = ambientColor * texture(material.diffuse, UVCoord).rgb * 0.6f;
 
     vec3 diffuse = texture(material.diffuse, UVCoord).rgb * diffuseColor;
     vec3 specular = texture(material.specular, UVCoord).rgb * specularColor;

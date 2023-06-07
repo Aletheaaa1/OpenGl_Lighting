@@ -2,7 +2,7 @@
 
 class Material
 {
-private:
+public:
 	float* m_ambient;
 	float* m_diffuse;
 	unsigned int m_material_diffuse;

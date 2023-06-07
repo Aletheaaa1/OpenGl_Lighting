@@ -10,7 +10,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
-// #include "Material.h"
+#include "LightDirectional.h"
 
 float vertices[] = {
     -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f, 0.0f, //
@@ -176,7 +176,7 @@ int main(void)
     VertexArrayObject lighting_vao;
     lighting_vao.AddBuffer(2, 3, GL_FLOAT, false, 8 * sizeof(float), 0);
 
-    Shader shader("./shader/LinghtingMaps.shader");
+    Shader shader("./shader/LinghtingMapsDirectional.shader");
     Shader lighting_shdaer("./shader/lightingCube.shader");
 
     Texture texture("./container2.png", GL_RGBA);
@@ -184,7 +184,7 @@ int main(void)
 
     Texture specular_texture("./container2_specular.png", GL_RGBA);
     specular_texture.Usetexture(GL_TEXTURE1);
-    std::cout<<specular_texture.GetSlot()<<std::endl;
+    std::cout << specular_texture.GetSlot() << std::endl;
 
     // Camera
     glm::mat4 module_mat = glm::mat4(1.0f);
@@ -195,7 +195,7 @@ int main(void)
     // Material
     float material_ambient[] = {0.1745f, 0.01175f, 0.01175f};
     unsigned int material_diffuse = texture.GetSlot();
-    unsigned int  material_speculatr = specular_texture.GetSlot();
+    unsigned int material_speculatr = specular_texture.GetSlot();
     float material_shininess = 64.0f;
     Material material(material_ambient, material_diffuse, material_speculatr, material_shininess);
 
@@ -212,13 +212,16 @@ int main(void)
 
         vbo.Bind();
 
+        // Light
+        LightDirectional direction_light(glm::vec3(10.0f, 10.0f, -5.0f), glm::vec3(glm::radians(45.0f), glm::radians(45.0f), 0.0f));
+
         float object_color[3] = {1.0f, 1.0f, 1.0f};
         float ambient_color[3] = {0.5f, 0.5f, 0.5f};
-        float light_color[3] = {1.0f, 1.0f, 1.0f};
-        float light_position[3] = {10.0f, 10.0f, -5.0f};
-
-        // light_position[0] = 1.0f + sin(glfwGetTime()) * 6.0f;
-        // light_position[1] = sin(glfwGetTime() / 2.0f) * 3.0f;
+        float light_color[3] = {direction_light.m_light_color.x, direction_light.m_light_color.y,
+                                direction_light.m_light_color.z};
+        float light_position[3] = {direction_light.m_light_position.x, direction_light.m_light_position.y,
+                                   direction_light.m_light_position.z};
+        float light_direction[3] = {direction_light.m_light_direction.x, direction_light.m_light_direction.y, direction_light.m_light_direction.z};
 
         view_mat = camera.GetViewMatrix();
         float camera_position[3] = {camera.position.x, camera.position.y, camera.position.z};
@@ -230,11 +233,11 @@ int main(void)
             vao.Bind();
             shader.Bind();
 
-            // object_color[0] = sin(glfwGetTime());
             shader.SetUniform3f("objectColor", object_color);
             shader.SetUniform3f("ambientColor", ambient_color);
-            shader.SetUniform3f("lightPos", light_position);
+            // shader.SetUniform3f("lightPos", light_position);
             shader.SetUniform3f("lightColor", light_color);
+            shader.SetUniform3f("lightDirection", light_direction);
             shader.SetUniform3f("cameraPos", camera_position);
 
             texture.Bind();
@@ -253,7 +256,7 @@ int main(void)
         lighting_shdaer.Bind();
 
         module_mat = glm::mat4(1.0f);
-        module_mat = glm::translate(module_mat, glm::vec3(light_position[0], light_position[1], light_position[2]));
+        module_mat = glm::translate(module_mat, glm::vec3(light_direction[0], light_direction[1], light_direction[2]));
         module_mat = glm::scale(module_mat, glm::vec3(0.25f, 0.25f, 0.25f));
         lighting_shdaer.SetUniformMat4("moduleMat", module_mat);
         lighting_shdaer.SetUniformMat4("viewMat", view_mat);
